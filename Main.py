@@ -1,6 +1,5 @@
 # import csv
 import numpy as np
-import matplotlib.pyplot as plt
 import csv as csv 
 from sklearn import svm
 import warnings 
@@ -15,24 +14,52 @@ from scipy.fftpack import fft
 from numpy import mean, sqrt, square
 from process_tool import *
 from Feature_Extractor import *
-from fft import *
 from dataparser import *
 from dataparsertest import *
+from load_PAMAP2 import Loading_PAMAP2
+from load_HAPT import Loading_HAPT
 warnings.filterwarnings("ignore")
 #%matplotlib inline
-def parse_args():
-    argparser = ArgumentParser()
-    argparser.add_argument("--dataset_path", default="/Users/LilyWU/Documents/activity_recognition_repo/PAMAP2_Dataset/Protocol")
-    argparser.add_argument("--file_path", default="/Users/LilyWU/Documents/activity_recognition_repo/Activity recognition exp 2/Watch_accelerometer_new.csv")
-    argparser.add_argument("--save_path",default="/Users/LilyWU/Documents/activity_recognition_repo/Activity recognition exp 2/save")
-    # argparser.add_argument("--save_path", default="patches/")
-    return argparser.parse_args()
+# def parse_args():
+#     argparser = ArgumentParser()
+#     argparser.add_argument("--HAPT_path", default="/Users/LilyWU/Documents/activity_recognition_repo/HAPT Data Set/RawData")
+#     argparser.add_argument("--PAMAP2_path", default="/Users/LilyWU/Documents/activity_recognition_repo/PAMAP2_Dataset/Protocol")
+#     argparser.add_argument("--",default="/Users/LilyWU/Documents/activity_recognition_repo/Activity recognition exp 2/save")
+#     # argparser.add_argument("--save_path", default="patches/")
+#     return argparser.parse_args()
+HAPT_folder="HAPT Data Set/RawData"
+PAMAP2_folder="PAMAP2_Dataset/Protocol"
+
+def Loading(dataset,percentage):
+   data={}
+   data['activity']=list()
+   data['timestamp']=list()
+   data['x']=list()
+   data['y']=list()
+   data['z']=list()
+   data['User']=list()
+
+   if(dataset=="HAPT"):
+      paths=glob.glob(HAPT_folder+'/*.txt')
+      for filename in paths: 
+
+          if(filename!=HAPT_folder+'/labels.txt'):
+              Loading_HAPT(filename,data)
+   if(dataset=="PAMAP2"):
+      paths=glob.glob(PAMAP2_folder+'/*.txt') 
+      id=1
+      for filepath in paths: 
+          Loading_PAMAP2(filepath,id,data)
+          id=id+1
+          # return piece
+#def sliding_windowing():
 
 if __name__ == '__main__':
-    dataset_path="/Users/LilyWU/Documents/PAMAP/PAMAP2_Dataset/"
-    parser=performDataParsing(dataset_path)
-    sessions=parser.Parsing()
+    Loading('HAPT',100)
+    
 
+
+    
     # final_data=pd.DataFrame()
     # for f in sub_dir:
     #     data=pd.read_csv(f, names=['time','Ay','Az','label'],header=None)
